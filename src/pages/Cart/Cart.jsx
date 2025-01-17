@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react'
+import axios from 'axios'
+import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 export const Cart = () => {
   const [cartItems, setCartItems] = useState([])
+  const isAuth = useSelector(state => state.user.isAuth)
 
   useEffect(() => {
     const storedCart = localStorage.getItem('cart')
@@ -26,6 +29,47 @@ export const Cart = () => {
     })
     setCartItems(updatedCart)
     localStorage.setItem('cart', JSON.stringify(updatedCart))
+  }
+
+  const handleBuy = async () => {
+    const TELEGRAM_BOT_TOKEN = '7895167430:AAEtIClWIzbfYTsNl0Bvt2BAvCsQ_uQXTWI'
+    const TELEGRAM_CHAT_ID = '6352403183'
+    const message = cartItems
+      .map(
+        item =>
+          `*Paket ID*: ${item.id}\n*Nom*: ${item.name}\n*Sotuvchi*: ${
+            item.seller
+          }\n*Narxi*: $${item.price.toFixed(2)}\n*Miqdor*: ${item.quantity}`
+      )
+      .join('\n\n')
+
+    const totalAmount = cartItems
+      .reduce((total, item) => total + item.price * item.quantity, 0)
+      .toFixed(2)
+
+    const finalMessage = `*Yangi Buyurtma:*\n\n${message}\n\n*Umumiy narx*: $${totalAmount}`
+
+    try {
+      const response = await axios.post(
+        `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
+        {
+          chat_id: TELEGRAM_CHAT_ID,
+          text: finalMessage,
+          parse_mode: 'Markdown'
+        }
+      )
+
+      if (response.data.ok) {
+        alert('Buyurtma muvaffaqiyatli yuborildi!')
+        localStorage.removeItem('cart')
+        setCartItems([])
+      } else {
+        alert('Buyurtmani yuborishda xatolik yuz berdi.')
+      }
+    } catch (error) {
+      console.error('Xatolik:', error)
+      alert('Xatolik yuz berdi, iltimos keyinroq urinib ko‘ring.')
+    }
   }
 
   return (
@@ -88,12 +132,22 @@ export const Cart = () => {
                 .reduce((total, item) => total + item.price * item.quantity, 0)
                 .toFixed(2)}
             </p>
-            <Link
-              to='/'
-              className='inline-block mt-4 px-6 py-2 bg-[#86b817] hover:bg-[#85b817c7] text-white rounded-lg'
-            >
-              Proceed to Checkout
-            </Link>
+            <br />
+            {isAuth ? (
+              <button
+                onClick={handleBuy}
+                className='bg-[#86b817] text-white px-4 py-2 rounded-md hover:bg-[#75a315] transition'
+              >
+                Buy
+              </button>
+            ) : (
+              <Link
+                to={'/signup'}
+                className='bg-[#86b817] text-white px-4 py-2 rounded-md hover:bg-[#75a315] transition'
+              >
+                SignUp
+              </Link>
+            )}
           </div>
         </div>
       ) : (
