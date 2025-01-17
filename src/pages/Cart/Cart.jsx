@@ -142,7 +142,7 @@ export const Cart = () => {
               </button>
             ) : (
               <Link
-                to={'/signup'}
+                to={'/login'}
                 className='bg-[#86b817] text-white px-4 py-2 rounded-md hover:bg-[#75a315] transition'
               >
                 SignUp
