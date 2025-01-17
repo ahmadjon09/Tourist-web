@@ -4,7 +4,7 @@ import aboutImg from '../../data/imgs/about.jpg'
 import { MoveRight } from 'lucide-react'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
-import Guides from '../Guides/Guides'
+import { Guides } from '../Guides/Guides'
 
 export const About = () => {
   useEffect(() => {

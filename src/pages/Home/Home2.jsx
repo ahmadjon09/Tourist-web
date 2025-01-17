@@ -25,7 +25,8 @@ export const Home2 = () => {
     '/login': { title: 'Login', breadcrumb: 'Login' },
     '/singup': { title: 'Sing up', breadcrumb: 'Sing up' },
     '/cart': { title: 'Cart', breadcrumb: 'Cart' },
-    '/get/:id': { title: 'Package', breadcrumb: 'Package' }
+    '/get/:id': { title: 'Package', breadcrumb: 'Package' },
+    '/search': { title: 'Search', breadcrumb: 'Search' }
   }
 
   const currentPage = pageData[location.pathname] || {

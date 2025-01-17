@@ -47,12 +47,14 @@ export const Home = () => {
               data-aos-duration='302'
               className='relative w-full max-w-[650px]'
             >
-              <input
-                className='w-full h-[55px] rounded-full px-5 text-gray-900 outline-none border border-gray-300 focus:border-[#86b817] transition-all duration-300'
-                type='text'
-                name='search'
-                placeholder='Eg: Uzbekistan'
-              />
+              <Link to={'search'}>
+                <input
+                  className='w-full h-[55px] rounded-full px-5 text-gray-900 outline-none border border-gray-300 focus:border-[#86b817] transition-all duration-300'
+                  type='text'
+                  name='search'
+                  placeholder='Eg: Uzbekistan'
+                />
+              </Link>
               <Link
                 to={'/search'}
                 className='absolute top-1/2 -translate-y-1/2 right-3 bg-[#86b817] text-white rounded-full py-2 px-6 transition-all duration-300 hover:bg-[#85b817cc]'

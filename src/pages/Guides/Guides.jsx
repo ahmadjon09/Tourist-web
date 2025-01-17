@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Swiper, SwiperSlide } from 'swiper/react'
+import Slider from 'react-slick'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import Axios from '../../Axios'
@@ -11,12 +11,11 @@ import {
 import { FacebookLogo, InstagramLogo, TwitterLogo } from '@phosphor-icons/react'
 import { Container } from '../../components/shared/Container/Container'
 import AOS from 'aos'
-import 'swiper/css'
-import 'swiper/css/navigation'
-import { Autoplay, Navigation, Pagination } from 'swiper/modules'
-import 'swiper/css/pagination'
 import 'aos/dist/aos.css'
-const Guides = () => {
+import 'slick-carousel/slick/slick.css'
+import 'slick-carousel/slick/slick-theme.css'
+
+export const Guides = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { data, isPending, isError } = useSelector(state => state.guides)
@@ -27,6 +26,7 @@ const Guides = () => {
       easing: 'ease-in-out',
       once: true
     })
+
     const getAllGuides = async () => {
       dispatch(getGuidesPending())
       try {
@@ -38,17 +38,18 @@ const Guides = () => {
         )
       }
     }
+
     getAllGuides()
   }, [dispatch])
 
-  const settings = {
+  const sliderSettings = {
     dots: true,
     infinite: true,
-    speed: 800,
-    autoplay: true,
-    autoplaySpeed: 3000,
+    speed: 500,
     slidesToShow: 4,
     slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3000,
     responsive: [
       {
         breakpoint: 1024,
@@ -57,7 +58,13 @@ const Guides = () => {
         }
       },
       {
-        breakpoint: 600,
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 2
+        }
+      },
+      {
+        breakpoint: 640,
         settings: {
           slidesToShow: 1
         }
@@ -67,7 +74,7 @@ const Guides = () => {
 
   return (
     <Container>
-      <div data-aos='fade-up' className='px-8 max-h-screen h-[700px]'>
+      <div className='px-8 max-h-screen h-auto'>
         <div className='w-full flex justify-center items-center gap-2 p-4'>
           <div className='flex flex-col gap-2 items-end'>
             <div className='w-10 h-[2px] bg-[#86b817]'></div>
@@ -87,66 +94,54 @@ const Guides = () => {
         <br />
         <br />
         {isPending ? (
-          <p> loading ...</p>
+          <p>Loading...</p>
         ) : isError ? (
           <p className='text-red-500 text-center text-xl'>Error: {isError}</p>
         ) : data.length > 0 ? (
-          <div className='h-full w-full pb-10 '>
-            <Swiper
-              modules={[Navigation, Pagination, Autoplay]}
-              navigation
-              pagination={{ clickable: true }}
-              autoplay={{ delay: 3000 }}
-              spaceBetween={30}
-              slidesPerView={4}
-              className='w-full h-full'
-            >
+          <div className='h-full w-full pb-10'>
+            <Slider {...sliderSettings}>
               {data.map((guide, index) => (
-                <SwiperSlide key={index} className='flex justify-center'>
-                  <div className='relative text-center bg-white h-[400px] rounded-md shadow-md mx-1'>
-                    <div className='w-full  h-[300px] overflow-hidden'>
-                      <img
-                        src={
-                          guide.photos[0] || 'https://via.placeholder.com/150'
-                        }
-                        alt={`${guide.firstName} ${guide.lastName}`}
-                        className='object-cover hover:scale-110 mb-4 transition-all duration-500 h-full w-full rounded-md'
-                      />
-                    </div>
-                    <div className='flex items-center justify-center w-full absolute bottom-[85px] gap-3 left-auto'>
-                      <a
-                        href={guide.fsblink}
-                        className='transition-all duration-300 flex w-[40px] hover:cursor-pointer h-[40px] rounded-full bg-white text-[#86b817] font-bold items-center justify-center border-b-[1px] border-[#86b817] hover:bg-[#86b817] hover:text-white'
-                      >
-                        <FacebookLogo size={30} />
-                      </a>
-                      <a
-                        href={guide.twtlink}
-                        className='transition-all duration-300 flex w-[40px] hover:cursor-pointer h-[40px] rounded-full bg-white text-[#86b817] font-bold items-center justify-center border-b-[1px] border-[#86b817] hover:bg-[#86b817] hover:text-white'
-                      >
-                        <TwitterLogo size={30} />
-                      </a>
-                      <a
-                        href={guide.inslink}
-                        className='transition-all duration-300 flex w-[40px] hover:cursor-pointer h-[40px] rounded-full bg-white text-[#86b817] font-bold items-center justify-center border-b-[1px] border-[#86b817] hover:bg-[#86b817] hover:text-white'
-                      >
-                        <InstagramLogo size={30} />
-                      </a>
-                    </div>
-                    <br />
-                    <h2 className='text-lg font-bold'>
-                      {guide.firstName} {guide.lastName}
-                    </h2>
-                    <p className='text-sm text-gray-500'>
-                      {guide.Designation.length > 150
-                        ? guide.Designation.slice(0, 150) + ' ...' ||
-                          'Designation'
-                        : guide.Designation || 'Designation'}
-                    </p>
+                <div
+                  key={index}
+                  className='relative text-center bg-white rounded-md shadow-md group'
+                >
+                  <div className='w-full h-[75%] overflow-hidden'>
+                    <img
+                      src={guide.photos[0] || 'https://via.placeholder.com/150'}
+                      alt={`${guide.firstName} ${guide.lastName}`}
+                      className='object-cover h-full w-full rounded-md'
+                    />
                   </div>
-                </SwiperSlide>
+                  <h2 className='text-lg font-bold'>
+                    {guide.firstName} {guide.lastName}
+                  </h2>
+                  <p className='text-sm text-gray-500'>
+                    {guide.Designation.length > 150
+                      ? guide.Designation.slice(0, 150) + ' ...'
+                      : guide.Designation || 'Designation'}
+                  </p>
+                  <div className='absolute inset-0 flex items-center justify-center p-2 transition-opacity opacity-0 group-hover:opacity-100 bg-black/50 rounded-md'>
+                    <div className='flex space-x-4'>
+                      <div className='flex items-center justify-center w-12 h-12 bg-blue-600 rounded-full transition-transform transform group-hover:scale-100 scale-75'>
+                        <a href={guide.fsblink}>
+                          <FacebookLogo size={30} color='#fff' />
+                        </a>
+                      </div>
+                      <div className='flex items-center justify-center w-12 h-12 bg-blue-500 rounded-full transition-transform transform group-hover:scale-100 scale-75'>
+                        <a href={guide.twtlink}>
+                          <TwitterLogo size={30} color='#fff' />
+                        </a>
+                      </div>
+                      <div className='flex items-center justify-center w-12 h-12 bg-red-500 rounded-full transition-transform transform group-hover:scale-100 scale-75'>
+                        <a href={guide.inslink}>
+                          <InstagramLogo size={30} color='#fff' />
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               ))}
-            </Swiper>
+            </Slider>
           </div>
         ) : (
           <p className='text-gray-600 text-center text-lg mt-4'>
@@ -157,4 +152,3 @@ const Guides = () => {
     </Container>
   )
 }
-export default Guides

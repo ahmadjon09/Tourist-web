@@ -20,6 +20,7 @@ import 'slick-carousel/slick/slick-theme.css'
 import { PackagesSale } from './pages/Products/SalePackages'
 import { Contact } from './pages/Contact/Contact'
 import { PackageDetails } from './pages/Products/GetOne'
+import { SearchPage } from './pages/Search/Search'
 
 function App () {
   const dispatch = useDispatch()
@@ -60,7 +61,8 @@ function App () {
         { path: 'packages', element: <PackagesSale /> },
         { path: 'contact', element: <Contact /> },
         { path: 'gallery', element: <Gallery /> },
-        { path: 'get/:id', element: <PackageDetails /> }
+        { path: 'get/:id', element: <PackageDetails /> },
+        { path: 'search', element: <SearchPage /> }
       ]
     }
   ])
